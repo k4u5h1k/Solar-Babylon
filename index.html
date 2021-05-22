@@ -1,0 +1,190 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Earth</title>
+    <style>
+        html,body,canvas { margin: 0; padding: 0; width: 100%; height: 100%; font-size: 0; }
+    </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.0.0-alpha.22/babylon.js" integrity="sha512-Hd7igZrI0sMsVhzi98MA+8Nvtg6CV7wh48L/tW5jbvM0AavUgDh2Hmw10EOPAx7U34qQ2PqMfUiNvxATcNq5SQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<canvas id="render-canvas"></canvas>
+<script>
+    var canvas = document.getElementById("render-canvas");
+    var engine = new BABYLON.Engine(canvas);
+    var scene = new BABYLON.Scene(engine);
+    var camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(70, 0, 120), scene);
+    camera.setTarget(BABYLON.Vector3.Zero())
+    camera.attachControl(canvas, true);
+    camera.speed = 3
+
+    var light = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 0, 100), scene);
+    light.intensity = 0.5
+
+    var skybox = BABYLON.Mesh.CreateBox("skyBox", 10000, scene);
+    var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+    skyboxMaterial.backFaceCulling = false;
+    skyboxMaterial.reflectionTexture = new BABYLON.Texture("img/8k_sky.jpg", scene, true);
+    skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.FIXED_EQUIRECTANGULAR_MODE;
+    skybox.material = skyboxMaterial;
+
+    var sun = BABYLON.Mesh.CreateSphere("sphere", 32, 54, scene);
+    sun.position = new BABYLON.Vector3(0, 0, 100)
+    var sunMaterial = new BABYLON.StandardMaterial("material", scene);
+    sunMaterial.emissiveTexture = new BABYLON.Texture("img/sun2.jpg", scene); 
+    sunMaterial.disableLighting = true;
+    sun.material = sunMaterial;
+
+    var mercury = BABYLON.Mesh.CreateSphere("sphere", 32, .27, scene);
+    var mercuryMaterial = new BABYLON.StandardMaterial("material", scene);
+    mercuryMaterial.emissiveTexture = new BABYLON.Texture("img/mercury.png", scene); 
+    mercuryMaterial.emissiveTexture.level = 0.4
+    mercuryMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    mercury.material = mercuryMaterial;
+    mercurytheta = 0
+
+    var venus = BABYLON.Mesh.CreateSphere("sphere", 32, .27, scene);
+    var venusMaterial = new BABYLON.StandardMaterial("material", scene);
+    venusMaterial.emissiveTexture = new BABYLON.Texture("img/venus.jpg", scene); 
+    venusMaterial.emissiveTexture.level = 0.4
+    venusMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    venus.material = venusMaterial;
+    venustheta = 0
+
+    var moon = BABYLON.Mesh.CreateSphere("sphere", 32, .125, scene);
+    var moonMaterial = new BABYLON.StandardMaterial("material", scene);
+    moonMaterial.emissiveTexture = new BABYLON.Texture("img/moon.jpg", scene); 
+    moonMaterial.emissiveTexture.level = 0.4
+    moonMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    moon.material = moonMaterial;
+    moontheta = Math.PI/2
+
+    var earth = BABYLON.Mesh.CreateSphere("sphere", 32, .5, scene);
+    var earthMaterial = new BABYLON.StandardMaterial("material", scene);
+    earthMaterial.emissiveTexture = new BABYLON.Texture("img/earth.jpeg", scene); 
+    earthMaterial.emissiveTexture.level = 0.4
+    earthMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    earth.material = earthMaterial;
+    earththeta = 0
+
+    var mars = BABYLON.Mesh.CreateSphere("sphere", 32, .25, scene);
+    var marsMaterial = new BABYLON.StandardMaterial("material", scene);
+    marsMaterial.emissiveTexture = new BABYLON.Texture("img/mars.jpg", scene); 
+    marsMaterial.emissiveTexture.level = 0.4
+    marsMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    mars.material = marsMaterial;
+    marstheta = 0
+
+    var jupiter = BABYLON.Mesh.CreateSphere("sphere", 32, 5.5, scene);
+    var jupiterMaterial = new BABYLON.StandardMaterial("material", scene);
+    jupiterMaterial.emissiveTexture = new BABYLON.Texture("img/jupiter.png", scene); 
+    jupiterMaterial.emissiveTexture.level = 0.4
+    jupiterMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    jupiter.material = jupiterMaterial;
+    jupitertheta = 0
+
+    var ringMaterial = new BABYLON.StandardMaterial("ring", scene);
+    ringMaterial.emissiveTexture = new BABYLON.Texture("img/ring.png", scene); 
+    ringMaterial.emissiveTexture.level = 0.8
+    ringMaterial.backFaceCulling = false; 
+
+    const innerRadius = 2.475*1.1;
+    const outerRadius = 2.475*2.3;
+    const segments = 100;
+    var ringShape = [
+        new BABYLON.Vector3(innerRadius, 0, 0),
+        new BABYLON.Vector3(outerRadius, 0, 0),
+        new BABYLON.Vector3(outerRadius, 0.01, 0),
+        new BABYLON.Vector3(innerRadius, 0.01, 0)
+    ];
+    
+    var ring = BABYLON.MeshBuilder.CreateLathe("lathe", 
+        {shape: ringShape, radius: innerRadius, tessellation:segments, sideOrientation: BABYLON.Mesh.DOUBLESIDE});
+    ring.convertToFlatShadedMesh();
+    ring.material = ringMaterial;
+
+    var saturn = BABYLON.Mesh.CreateSphere("sphere", 32, 4.95, scene);
+    var saturnMaterial = new BABYLON.StandardMaterial("material", scene);
+    saturnMaterial.emissiveTexture = new BABYLON.Texture("img/saturn.jpg", scene); 
+    saturnMaterial.emissiveTexture.level = 0.4
+    saturnMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    saturn.material = saturnMaterial;
+    saturntheta = 0
+
+    var uranus = BABYLON.Mesh.CreateSphere("sphere", 32, 2, scene);
+    var uranusMaterial = new BABYLON.StandardMaterial("material", scene);
+    uranusMaterial.emissiveTexture = new BABYLON.Texture("img/uranus.jpg", scene); 
+    uranusMaterial.emissiveTexture.level = 0.4
+    uranusMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    uranus.material = uranusMaterial;
+    uranustheta = 0
+
+    var neptune = BABYLON.Mesh.CreateSphere("sphere", 32, 1.376, scene);
+    var neptuneMaterial = new BABYLON.StandardMaterial("material", scene);
+    neptuneMaterial.emissiveTexture = new BABYLON.Texture("img/neptune.jpg", scene); 
+    neptuneMaterial.emissiveTexture.level = 0.4
+    neptuneMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
+    neptune.material = neptuneMaterial;
+    neptunetheta = 0
+
+    function renderLoop(){
+
+        mercury.rotation.y += 0.01;
+        mercurytheta += 0.0001/0.241
+        mercury.position.x = 40*Math.cos(mercurytheta)
+        mercury.position.z = 100 + 40*Math.sin(mercurytheta)
+
+        venus.rotation.y += 0.0003;
+        venustheta += 0.0001/0.651
+        venus.position.x = 70*Math.cos(venustheta)
+        venus.position.z = 100 + 70*Math.sin(venustheta)/0.651
+
+        earth.rotation.y += 0.01;
+        earththeta += 0.0001
+        earth.position.x = 100*Math.cos(earththeta)
+        earth.position.z = 100 + 100*Math.sin(earththeta)
+
+        moon.rotation.y += 0.01;
+        moontheta += 0.0001/0.07
+        moon.position.x = earth.position.x + 1*Math.cos(moontheta)
+        moon.position.z = earth.position.z + 1*Math.sin(moontheta)
+
+        mars.rotation.y += 0.01;
+        marstheta += 0.0001/1.88
+        mars.position.x = 152*Math.cos(marstheta)
+        mars.position.z = 100 + 152*Math.sin(marstheta)
+
+        jupiter.rotation.y += 0.00415;
+        jupitertheta += 0.0001/11
+        jupiter.position.x = 520*Math.cos(jupitertheta)
+        jupiter.position.z = 100 + 520*Math.sin(jupitertheta)
+
+        saturn.rotation.y += 0.0445;
+        ring.rotation.x = 0.1;
+        saturn.rotation.x = 0.1;
+        saturntheta += 0.0001/29.4
+        ring.position.x = 958*Math.cos(saturntheta)
+        ring.position.z = 100 + 958*Math.sin(saturntheta)
+        saturn.position.x = ring.position.x
+        saturn.position.z = ring.position.z 
+
+        uranus.rotation.y += 0.00415;
+        uranustheta += 0.0001/83.7
+        uranus.position.x = 1920*Math.cos(uranustheta)
+        uranus.position.z = 100 + 1920*Math.sin(uranustheta)
+
+        neptune.rotation.y += 0.00415;
+        neptunetheta += 0.0001/163.7
+        neptune.position.x = 3005*Math.cos(neptunetheta)
+        neptune.position.z = 100 + 3005*Math.sin(neptunetheta)
+
+
+        sun.rotation.y += 0.000001;
+
+        scene.render();
+    };
+    engine.runRenderLoop(renderLoop);
+</script>
+</body>
+</html>
