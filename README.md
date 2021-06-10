@@ -1,5 +1,6 @@
 # Solar-Babylon
-Our Solar system modelled in BabylonJS.
+Our solar system modelled in BabylonJS.
+_Use a controller for maximum enjoyment_
 
 ![Screenshot 2021-05-22 at 5 23 29 PM](https://user-images.githubusercontent.com/59250093/119226975-6788bd80-bb29-11eb-9e07-ae87e30fa76b.png)
 
