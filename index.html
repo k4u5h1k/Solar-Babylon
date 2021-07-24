@@ -15,9 +15,16 @@
     var engine = new BABYLON.Engine(canvas);
     var scene = new BABYLON.Scene(engine);
     scene.collisionsEnabled = true
-    var camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(70, 0, 120), scene);
-    camera.setTarget(BABYLON.Vector3.Zero())
+    var camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(127, 0, 107), scene);
+    camera.setTarget(new BABYLON.Vector3(0, 0, 100))
     camera.attachControl(canvas, true);
+
+    // Allow movement with WASD
+    camera.keysUp.push(87);
+	camera.keysDown.push(83);
+	camera.keysLeft.push(65);
+	camera.keysRight.push(68);
+
     camera.ellipsoid = new BABYLON.Vector3(10, 10, 10);
     camera.checkCollisions = true
     camera.speed = 3
@@ -196,6 +203,8 @@
 
 
         sun.rotation.y += 0.000001;
+
+        console.log(camera.position)
 
         scene.render();
     };
