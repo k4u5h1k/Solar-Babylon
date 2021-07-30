@@ -16,9 +16,10 @@
     var scene = new BABYLON.Scene(engine);
     scene.clearColor = new BABYLON.Color3.Black();
     scene.collisionsEnabled = true
-    var camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(127, 0, 107), scene);
+    var camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(136, 0, 107), scene);
     camera.setTarget(new BABYLON.Vector3(0, 0, 100))
     camera.attachControl(canvas, true);
+    camera.fov = 0.4;
 
     // Allow movement with WASD
     camera.keysUp.push(87);
