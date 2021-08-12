@@ -1,5 +1,9 @@
 # Solar-Babylon
-Our solar system modelled in BabylonJS. Hosted [here](https://k4u5h1k.github.io/Solar-Babylon/).     
+Our solar system modelled in BabylonJS. Hosted [here](https://k4u5h1k.github.io/Solar-Babylon/). 
+# Controls
+- **Hold** left mouse click to control camera.  
+- WASD for movement.  
+
 _Gamepad/Controller recommended_
 
 ![Screenshot 2021-05-22 at 5 23 29 PM](https://user-images.githubusercontent.com/59250093/119226975-6788bd80-bb29-11eb-9e07-ae87e30fa76b.png)
